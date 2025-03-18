@@ -35,4 +35,4 @@ app.use('/api/user', user)
 
 const PORT = process.env.PORT || 1234
 
-module.exports = app;
+const server = app.listen(PORT, console.log('Server running in ', process.env.NODE_ENV, 'mode on port', PORT, 'on', HOST))
