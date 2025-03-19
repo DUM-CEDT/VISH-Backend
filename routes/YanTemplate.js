@@ -10,7 +10,7 @@ router.route('/:id').get( getYanTemplate);
 router.route('/:id').delete(protect,authorize("admin"), deleteYanTemplate);
 router.route('/download/:id').get(protect, downloadYanTemplate);
 router.route('/download_nosession/:id').get(downloadYanTemplateWithoutSession);
-router.post('/calculate-yan-layers', protect, calculateYanLayers);
+router.post('/calculate-yan-layers', calculateYanLayers);
 
 
 module.exports = router;

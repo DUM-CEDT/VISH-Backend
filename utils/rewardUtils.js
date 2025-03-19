@@ -48,7 +48,7 @@ const rewardUtil = async (vishId, userId) => {
     uniqueVishers = uniqueVishers.filter((visher) => visher != vish.user_id.toString())
     console.log(uniqueVishers)
 
-    if (uniqueVishers.length < vish.bon_vish_target) {
+    if (uniqueVishers.length < vish.bon_vish_target && vish.bon_condition == 1) {
       throw new Error('Total vish count must be greater than or equal to bon_vish_target');
     }
 
