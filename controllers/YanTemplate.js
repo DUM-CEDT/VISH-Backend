@@ -255,6 +255,9 @@ exports.downloadYanTemplateWithoutSession = async (req, res, next) => {
       });
     }
 
+    yanTemplate.yan_template_image_list = yanTemplate.yan_template_image_list.filter(n => n);
+
+
     const yanImages = await Promise.all(
       yanTemplate.yan_template_image_list.map(async (imageId) => {
         const yanImage = await YanTemplateImage.findById(imageId);
