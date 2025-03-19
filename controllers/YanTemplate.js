@@ -243,6 +243,77 @@ exports.downloadYanTemplate = async (req, res, next) => {
   }
 };
 
+
+exports.downloadYanTemplateWithoutSession = async (req, res, next) => {
+  try {
+    const yanTemplate = await YanTemplate.findById(req.params.id);
+
+    if (!yanTemplate) {
+      return res.status(404).json({
+        success: false,
+        msg: "Yan Template not found",
+      });
+    }
+
+    const yanImages = await Promise.all(
+      yanTemplate.yan_template_image_list.map(async (imageId) => {
+        const yanImage = await YanTemplateImage.findById(imageId);
+        if (!yanImage) throw new Error("Yan Image not found");
+        return Buffer.from(yanImage.yan_image_base64, "base64");
+      })
+    );
+
+    if (yanImages.length === 0) {
+      return res.status(404).json({
+        success: false,
+        msg: "No images found for this template",
+      });
+    }
+
+    const bgColorHex = yanTemplate.background_color || "#FFFFFF";
+    const backgroundColor = hexToRgba(bgColorHex);
+
+    const width = 364;
+    const height = 540;
+
+    const background = await sharp({
+      create: {
+        width,
+        height,
+        channels: 4,
+        background: backgroundColor,
+      },
+    })
+      .png()
+      .toBuffer();
+
+    const layeredImage = await sharp(background)
+      .composite(
+        yanImages.map((imageBuffer) => ({ input: imageBuffer, blend: "over" }))
+      )
+      .png()
+      .toBuffer();
+
+    res.setHeader("Content-Type", "image/png");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="Yan.png"`
+    );
+
+    res.send(layeredImage);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: error.message,
+    });
+  }
+};
+
+
+
+
+
+
 //@desc         calculateYanLayers
 //@route        POST /api/merchandise/calculate-yan-layers
 //@access       Private

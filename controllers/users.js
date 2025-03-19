@@ -129,7 +129,7 @@ exports.addYanTemplate = async (req, res, next) => {
         }
 
         if (user.yan_template_id.includes(yanTemplateId)) {
-            return res.status(400).json({
+            return res.status(200).json({
                 success: false,
                 msg: `Yan template with id ${yanTemplateId} already exists in user's template list`
             });
