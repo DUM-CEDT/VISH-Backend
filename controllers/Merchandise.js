@@ -10,7 +10,7 @@ exports.getAllMerch = async (req, res) => {
     const parsedLimit = parseInt(limit, 10);
     const skip = (parsedPage - 1) * parsedLimit;
 
-    const query = {};
+    const query = { name: { $ne: 'allyan' } };
     if (type && ['ยันต์', 'กำไล', 'แหวน', 'สร้อย', 'เบอร์มงคล', 'อื่นๆ'].includes(type)) {
       query.type = type;
     }
